@@ -73,58 +73,42 @@ void ftCommon_8007C930(Fighter* fp, float result)
     fp->xE4_ground_accel_1 = result;
 }
 
-void ftCommon_8007C98C(Fighter* fp, float arg8, float arg9, float argA)
+void ftCommon_8007C98C(Fighter* fp, float accel, float target_vel,
+                       float gr_friction)
 {
-    float temp_f1;
-    float phi_f0;
-    float phi_f1;
-    float phi_f3;
-    float phi_f1_2;
-    float result;
-
-    phi_f3 = argA;
-    result = arg8;
-    if (!arg9) {
-        phi_f1 = fabs_inline(fp->gr_vel);
-        phi_f0 = fabs_inline(argA);
-        if (phi_f0 > phi_f1) {
-            phi_f3 = -fp->gr_vel;
-        } else if (fp->gr_vel > 0) {
-            phi_f3 = -argA;
-        }
-        fp->xE4_ground_accel_1 = phi_f3;
+    if (!target_vel) {
+        ftCommon_8007C930(fp, gr_friction);
         return;
     }
-    if (!(fp->gr_vel * arg8 < 0)) {
-        if (arg8 > 0) {
-            if (fp->gr_vel + arg8 > arg9) {
-                temp_f1 = -argA;
-                phi_f1_2 = temp_f1;
-                if (fp->gr_vel + temp_f1 < arg9) {
-                    phi_f1_2 = arg9 - fp->gr_vel;
+
+    if (!(fp->gr_vel * accel < 0)) {
+        if (accel > 0) {
+            if (fp->gr_vel + accel > target_vel) {
+                accel = -gr_friction;
+                if (fp->gr_vel + accel < target_vel) {
+                    accel = target_vel - fp->gr_vel;
                 }
-                result = phi_f1_2;
-                if (fp->gr_vel + phi_f1_2 >
+                if (fp->gr_vel + accel >
                     fp->co_attrs.grounded_max_horizontal_velocity)
                 {
-                    result = fp->co_attrs.grounded_max_horizontal_velocity -
-                             fp->gr_vel;
+                    accel = fp->co_attrs.grounded_max_horizontal_velocity -
+                            fp->gr_vel;
                 }
             }
-        } else if (fp->gr_vel + arg8 < arg9) {
-            result = argA;
-            if (fp->gr_vel + argA > arg9) {
-                result = arg9 - fp->gr_vel;
+        } else if (fp->gr_vel + accel < target_vel) {
+            accel = gr_friction;
+            if (fp->gr_vel + accel > target_vel) {
+                accel = target_vel - fp->gr_vel;
             }
-            if (fp->gr_vel + result <
+            if (fp->gr_vel + accel <
                 -fp->co_attrs.grounded_max_horizontal_velocity)
             {
-                result = -fp->co_attrs.grounded_max_horizontal_velocity -
-                         fp->gr_vel;
+                accel = -fp->co_attrs.grounded_max_horizontal_velocity -
+                        fp->gr_vel;
             }
         }
     }
-    fp->xE4_ground_accel_1 = result;
+    fp->xE4_ground_accel_1 = accel;
 }
 
 void ftCommon_8007CA80(Fighter* fp, float result, float arg2, float arg3)
