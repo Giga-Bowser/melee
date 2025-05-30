@@ -7,8 +7,8 @@
 #include <baselib/forward.h>
 
 /* 07C930 */ void ftCommon_8007C930(ftCo_Fighter*, float);
-/* 07C98C */ void ftCommon_8007C98C(ftCo_Fighter*, float vel, float,
-                                    float gr_friction);
+/* 07C98C */ void ftCommon_8007C98C(ftCo_Fighter*, float accel,
+                                    float target_vel, float gr_friction);
 /* 07CA80 */ void ftCommon_8007CA80(ftCo_Fighter* fp, float result, float,
                                     float);
 /* 07CADC */ void ftCommon_8007CADC(ftCo_Fighter*, float, float, float);
